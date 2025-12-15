@@ -1,21 +1,11 @@
-const { Client, GatewayIntentBits } = require("discord.js");
-
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
-});
-
-client.once("ready", () => {
-  console.log("Bot online");
-});
-
-client.on("messageCreate", msg => {
-  if (msg.content === "ping") {
-    msg.reply("pong");
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1"
   }
-});
-
-client.login(process.env.TOKEN);
+}
