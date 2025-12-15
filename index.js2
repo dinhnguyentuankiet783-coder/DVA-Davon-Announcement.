@@ -1,0 +1,58 @@
+const { Client, GatewayIntentBits, EmbedBuilder } = require("discord.js");
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
+
+const PREFIX = "dv!";
+
+client.once("ready", () => {
+  console.log(`✅ Bot online: ${client.user.tag}`);
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.author.bot) return;
+
+  // 📢 dv!m: BOT NÓI THAY
+  if (message.content.startsWith("dv!m:")) {
+    const text = message.content.slice(5).trim();
+    if (!text) return;
+
+    await message.delete().catch(() => {});
+    return message.channel.send(text);
+  }
+
+  // ❌ dv!x XOÁ TIN NHẮN BOT
+  if (message.content === "dv!x") {
+    const messages = await message.channel.messages.fetch({ limit: 15 });
+    const botMsg = messages.find(
+      (msg) => msg.author.id === client.user.id
+    );
+
+    if (!botMsg)
+      return message.reply("Bot Chưa Gửi Tin Nhắn!");
+
+    await botMsg.delete();
+    await message.delete().catch(() => {});
+  }
+
+  // 📋 dv!show HIỆN LỆNH
+  if (message.content === "dv!show") {
+    const embed = new EmbedBuilder()
+      .setColor(0x00ffcc)
+      .setTitle("📋 Danh Sách Lệnh Bot DVA🪽")
+      .setDescription(`
+1️⃣. Bot Chat Thay Người Dùng: dv!m: ( Nội Dung )
+2️⃣. Xoá Tin Nhắn Bot Đã Gửi: dv!x
+3️⃣. Hiện Danh Sách Lệnh: dv!show`)
+      .setFooter({ text: "DV Bot" });
+
+    return message.reply({ embeds: [embed] });
+  }
+});
+
+client.login("YOUR_BOT_TOKEN");
